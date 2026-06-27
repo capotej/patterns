@@ -12,6 +12,7 @@ This repo houses a collection of common patterns that can be mixed and matched t
 | [P004](patterns/P004-using-pnpm.md) | Using pnpm | pnpm declared via `packageManager`, committed lockfile, gitignored store. |
 | [P005](patterns/P005-using-biome.md) | Using Biome | Biome lint/format pinned with a version-matched `biome.json`. |
 | [P006](patterns/P006-using-typescript.md) | Using TypeScript | `tsc` with strict mode, single `src/` root, declaration emit. |
+| [P007](patterns/P007-using-markdownlint.md) | Using markdownlint-cli2 | Markdown lint via `.markdownlint-cli2.jsonc`, composed into `pnpm lint`. |
 
 ## Pattern Format
 
