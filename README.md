@@ -18,6 +18,7 @@ This repo houses a collection of common patterns that can be mixed and matched t
 | [P010](patterns/P010-using-uv-and-pyproject-toml.md) | Using uv and pyproject.toml | `pyproject.toml` as the single config source, committed `uv.lock`, `uv run` everywhere (PEP 668). |
 | [P011](patterns/P011-using-ruff.md) | Using ruff | Python linter as a uv dev dep, configured in `[tool.ruff]`, `uv run ruff check .`, gated in CI. |
 | [P012](patterns/P012-using-ty.md) | Using ty | Python type checker as a uv dev dep, zero-config, `uv run ty check src`, gated in CI. |
+| [P013](patterns/P013-code-notes.md) | Code Notes (GHC-style "Notes") | Titled, cross-referenceable block comments (`Note [Title]` / `See Note [Title]`) that describe the present state, not the journey. |
 
 ## Pattern Format
 
