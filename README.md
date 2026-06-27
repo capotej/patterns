@@ -14,6 +14,7 @@ This repo houses a collection of common patterns that can be mixed and matched t
 | [P006](patterns/P006-using-typescript.md) | Using TypeScript | `tsc` with strict mode, single `src/` root, declaration emit. |
 | [P007](patterns/P007-using-markdownlint.md) | Using markdownlint-cli2 | Markdown lint via `.markdownlint-cli2.jsonc`, composed into `pnpm lint`. |
 | [P008](patterns/P008-using-hadolint.md) | Using hadolint | Dockerfile lint via mise-provisioned binary + `.hadolint.yaml`, composed into `pnpm lint`. |
+| [P009](patterns/P009-using-actionlint.md) | Using actionlint | GitHub Actions workflow lint via mise binary + `.actionlint.yaml`, composed into `pnpm lint`. |
 
 ## Pattern Format
 
