@@ -15,6 +15,9 @@ This repo houses a collection of common patterns that can be mixed and matched t
 | [P007](patterns/P007-using-markdownlint.md) | Using markdownlint-cli2 | Markdown lint via `.markdownlint-cli2.jsonc`, composed into `pnpm lint`. |
 | [P008](patterns/P008-using-hadolint.md) | Using hadolint | Dockerfile lint via mise-provisioned binary + `.hadolint.yaml`, gated in CI. |
 | [P009](patterns/P009-using-actionlint.md) | Using actionlint | GitHub Actions workflow lint via mise binary + `.actionlint.yaml`, gated in CI. |
+| [P010](patterns/P010-using-uv-and-pyproject-toml.md) | Using uv and pyproject.toml | `pyproject.toml` as the single config source, committed `uv.lock`, `uv run` everywhere (PEP 668). |
+| [P011](patterns/P011-using-ruff.md) | Using ruff | Python linter as a uv dev dep, configured in `[tool.ruff]`, `uv run ruff check .`, gated in CI. |
+| [P012](patterns/P012-using-ty.md) | Using ty | Python type checker as a uv dev dep, zero-config, `uv run ty check src`, gated in CI. |
 
 ## Pattern Format
 
