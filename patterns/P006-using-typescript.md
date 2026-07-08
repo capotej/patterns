@@ -2,13 +2,14 @@
 id: P006
 name: using-typescript
 date: 2026-06-27
+revision: 1
 author: Julio Capote
 used_in: ['github.com/boldblackai/harness', 'github.com/capotej/pi-zsearch']
 ---
 
 # Using TypeScript
 
-TypeScript is compiled with `tsc`, configured via a committed `tsconfig.json` with `strict` mode on, a single `src/` source root, and declaration emit. Build and typecheck go through pnpm scripts; typecheck is gated in CI where CI exists. `tsc` is the only compiler — no babel, no swc, no custom pipeline.
+TypeScript is compiled with `tsc`, configured via a committed `tsconfig.json` with `strict` mode on, a single `src/` source root, and declaration emit. Build and typecheck go through pnpm scripts; typecheck is gated in CI where CI exists. `tsc` is the only compiler — no babel, no swc, no custom pipeline. The toolchain targets TypeScript 7 — the native Go rewrite of the compiler — which is a drop-in for this tsconfig: the package is still `typescript`, the binary is still `tsc`, and the explicit fields below are precisely what neutralize its breaking default changes.
 
 ## When to use
 
@@ -25,7 +26,7 @@ TypeScript is compiled with `tsc`, configured via a committed `tsconfig.json` wi
 ```json title="package.json"
 {
   "devDependencies": {
-    "typescript": "^6.0.2",
+    "typescript": "^7.0.2",
     "@types/node": "^25.6.0"
   }
 }
@@ -37,6 +38,24 @@ TypeScript is compiled with `tsc`, configured via a committed `tsconfig.json` wi
 ```
 
 Node's types (`@types/node`) go alongside it, with a version matching the Node runtime the project targets.
+
+### TypeScript 7: native Go port, same `tsc`
+
+TypeScript 7 is a native Go rewrite of the compiler — roughly 10× faster, multithreaded, with the same type-checking semantics as 6.0. The adoption story is deliberately boring: the package is still `typescript`, the binary is still `tsc`, and you still `pnpm install` / `pnpm build` exactly as before. There is no `tsgo` binary to reach for, and `@typescript/native-preview` is retired infrastructure from the pre-release period — not something to install in a stable project.
+
+```json title="package.json"
+// Wrong — pinning the preview/native package expecting a separate `tsgo`
+// binary. The stable TypeScript 7 release IS the `typescript` package; pin
+// `^7` and invoke `tsc` through pnpm like any other version.
+```
+
+Three things actually move when going 6.x → 7.x, and the tsconfig below is already shaped to absorb all of them:
+
+- **No stable compiler API.** TypeScript 7 intentionally ships no programmatic compiler API (a new one is targeted for 7.1). This only bites code that `import`s `typescript` directly — typescript-eslint, ts-morph, custom AST transformers. These projects compile with the `tsc` binary and never import the compiler, so the gap is a non-issue. If a dependency does need the 6.0 API, Microsoft ships `@typescript/typescript6` (re-exports the old API, adds a `tsc6` binary) to run side-by-side — add it for that dependency only, never as the project's own compiler.
+- **Silent default flips.** 7.0 adopts 6.0's new defaults: `strict`, `module: esnext`, `noUncheckedSideEffectImports`, and `stableTypeOrdering` are on by default; `rootDir` defaults to `./` and `types` defaults to `[]`. The sections below flag each one — and because this pattern sets `rootDir`, `types`, `strict`, `esModuleInterop`, and the `module`/`moduleResolution` pair explicitly, every flip is already neutralized.
+- **Hard-removed legacy options.** 6.0's deprecations become hard errors: `target: es5`, `downlevelIteration`, `module: amd/umd/system/none`, `moduleResolution: node/node10/classic`, `baseUrl`, and `esModuleInterop: false` / `allowSyntheticDefaultImports: false` are all gone. Every value these tsconfigs use is on the surviving list.
+
+On the first 7.x build, delete any stale `*.tsbuildinfo` — the Go compiler's incremental format is incompatible with the old JS compiler's (only relevant if you previously enabled incremental/composite builds).
 
 ### strict: true is non-negotiable
 
@@ -50,7 +69,7 @@ Every tsconfig enables `strict`. This turns on the full strict family (`noImplic
 }
 ```
 
-If the codebase has pre-existing type holes, fix them; don't relax the compiler.
+If the codebase has pre-existing type holes, fix them; don't relax the compiler. (TypeScript 7 flips `strict` to `true` by default, so this is also what you get if you omit the flag — but keep it explicit: it documents intent and survives any future default change.)
 
 ### Single source root, single emit dir
 
@@ -66,7 +85,7 @@ All TypeScript lives under `src/`; everything else compiles to a single `outDir`
 }
 ```
 
-- `rootDir: "src"` — the compiler root; preserves directory structure in the output.
+- `rootDir: "src"` — the compiler root; preserves directory structure in the output. This explicit value is also the exact mitigation TypeScript 7's release notes prescribe: 7.0 changed `rootDir`'s default to `./` (the tsconfig directory), so a project whose sources live under `src/` and that omits `rootDir` now nests output as `dist/src/…` instead of `dist/…`. Setting it explicitly sidesteps the break entirely.
 - `include: ["src/**/*"]` — only files under `src/` are part of the compilation.
 - `outDir` — the emit destination (`dist` or `bin`).
 
@@ -102,6 +121,8 @@ Both tsconfigs set `types: ["node"]` rather than letting TypeScript auto-include
 }
 ```
 
+This explicit array is also TypeScript 7's required form: 7.0 changed `types`'s default to `[]` (nothing auto-included), so the old implicit auto-discovery from `node_modules/@types` is gone. `types: ["node"]` is exactly the new default's intended replacement.
+
 ### Standard interop and speed flags
 
 ```json title="tsconfig.json"
@@ -113,7 +134,7 @@ Both tsconfigs set `types: ["node"]` rather than letting TypeScript auto-include
 }
 ```
 
-- `esModuleInterop: true` — correct default-import interop with CommonJS modules.
+- `esModuleInterop: true` — correct default-import interop with CommonJS modules. In TypeScript 7 this is no longer optional: `esModuleInterop: false` and `allowSyntheticDefaultImports: false` are hard errors (interop is always on), so setting `true` is now both correct and mandatory.
 - `skipLibCheck: true` — skip type-checking the `.d.ts` of dependencies. Faster builds; the project's own code is still fully checked.
 
 ### target, module, and moduleResolution are per-project
@@ -125,7 +146,7 @@ These three are chosen by the deployment target, and that's the one place the tw
 | harness | ES2020 | CommonJS | bundler | bin |
 | pi-zsearch | ES2022 | NodeNext | NodeNext | dist |
 
-The rule is not "use ES2022" or "use NodeNext" — it's: **pick the lowest target/module that covers your runtime, and make `module` and `moduleResolution` agree** (e.g. `NodeNext`/`NodeNext`, or a CJS module with a compatible resolution). Mismatched module/resolution pairs cause import-resolution bugs that are hard to trace.
+The rule is not "use ES2022" or "use NodeNext" — it's: **pick the lowest target/module that covers your runtime, and make `module` and `moduleResolution` agree** (e.g. `NodeNext`/`NodeNext`, or a CJS module with a compatible resolution). Mismatched module/resolution pairs cause import-resolution bugs that are hard to trace. TypeScript 7 enforces this by hard-removing the legacy values — `module: amd | umd | system | none` and `moduleResolution: node | node10 | classic` are now compile errors (use `esnext`/`preserve` or `nodenext`/`bundler`), `target: es5` and `downlevelIteration` are gone, and `baseUrl` is removed (write `paths` relative to the tsconfig instead). Every value the two reference repos above use survives that cull unchanged.
 
 ### The build, prepare, and typecheck scripts
 
@@ -187,11 +208,14 @@ When adding a dependency, also add its `@types/*` package if the dependency does
 - **Installing `typescript` or `tsc` globally / via mise.** `tsc` is a devDependency invoked through pnpm; it resolves to the pinned binary in `node_modules/.bin`. A global or mise-managed tsc is a different version and defeats the lockfile. Mirrors the P003/P005 rule that package-managed tools are not mise tools.
 - **Source files outside `src/`.** With `rootDir: "src"` and `include: ["src/**/*"]`, TypeScript outside `src/` is either ignored or breaks `rootDir`. Keep all `.ts` under `src/`.
 - **Omitting the `outDir` from `exclude`.** If `outDir` isn't excluded, `tsc --watch` and incremental builds can re-read emitted `.d.ts`/`.js`, causing stale-type errors. Always exclude `node_modules` and the emit dir.
-- **`module` / `moduleResolution` mismatches.** e.g. `module: ESNext` with `moduleResolution: node`. The pair must be consistent (NodeNext/NodeNext, or a CJS module with a compatible resolution). Mismatches cause import-resolution failures that surface far from the cause.
+- **`module` / `moduleResolution` mismatches — or any of TypeScript 7's removed legacy values.** e.g. `module: ESNext` with `moduleResolution: node`, or reaching for `moduleResolution: "node"`/`"node10"`/`"classic"`, `module: "amd"|"umd"|"system"|"none"`, `target: "es5"`, `downlevelIteration`, or `baseUrl`. In 7.x all of those are hard errors, not warnings; the pair must be consistent (NodeNext/NodeNext, or a CJS module with a compatible resolution) and use only the surviving values. Mismatches cause import-resolution failures that surface far from the cause.
 - **Letting `types` auto-resolve from `node_modules/@types`.** Without an explicit `types` array, every `@types/*` package installed becomes globally ambient. Set `types: ["node"]` (plus only what's intentionally global) and import other types explicitly.
 - **Adding babel/swc/esbuild on top of `tsc`.** The project compiles with `tsc` alone. A second transpiler introduces divergent emit and a second config to maintain.
 - **A `build` script that doesn't start with `tsc`.** If `build` shells out to a bundler or a custom script that bypasses typecheck, type errors stop failing the build. `build` must invoke `tsc` (plain or composed with asset copies).
 - **No `prepare` script.** Without `prepare: "tsc"`, consumers installing from a git URL get an unbuilt package. `prepare` runs on install and ships a ready-to-use package.
+- **Pinning `@typescript/native-preview` / expecting a `tsgo` binary.** That was the pre-release preview package. The stable TypeScript 7 release IS the `typescript` package and IS `tsc`; pin `^7` and run `tsc` like before. The preview package is retired infrastructure, not the supported path.
+- **Importing the `typescript` compiler API in a 7.x project.** TypeScript 7 deliberately ships no stable programmatic compiler API (targeted for 7.1). If a dependency (typescript-eslint, ts-morph, a custom transformer) needs the 6.0 API, alias it to `@typescript/typescript6` — don't block the build on it, and don't `import "typescript"` in the project's own code. (A non-issue for projects that only invoke the `tsc` binary.)
+- **Leaving stale `*.tsbuildinfo` across a 6→7 bump.** The Go compiler's incremental format is incompatible with the old JS compiler's. If you ever had incremental/composite builds enabled, delete the `*.tsbuildinfo` files on the first 7.x build rather than debugging phantom errors.
 
 ## Reference: tsconfig.json across repos
 
@@ -204,7 +228,7 @@ When adding a dependency, also add its `@types/*` package if the dependency does
     "prepare": "tsc"
   },
   "devDependencies": {
-    "typescript": "^6.0.2",
+    "typescript": "^7.0.2",
     "@types/node": "^25.6.0"
   }
 }
@@ -241,7 +265,7 @@ A containerized agent runner that ships a CLI (`bin/harness.js`). Targets ES2020
     "prepare": "tsc"
   },
   "devDependencies": {
-    "typescript": "^6.0.2",
+    "typescript": "^7.0.2",
     "@types/node": "^22.0.0"
   }
 }

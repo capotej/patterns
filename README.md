@@ -40,6 +40,23 @@ used_in: ['github.com/capotej/example-repo']
 ---
 ```
 
+Patterns can evolve over time. A revised pattern adds an optional `revision` key:
+
+```yaml
+---
+id: P006
+name: using-typescript
+date: 2026-06-27
+revision: 1
+author: Julio Capote
+used_in: ['github.com/boldblackai/harness', 'github.com/capotej/pi-zsearch']
+---
+```
+
+- A pattern as first published carries **no** `revision` key — that's the implicit **revision 0** (the original). `date` stays as the creation date and does not change on revision.
+- The first material edit adds `revision: 1`; each subsequent material edit increments it (`2`, `3`, …).
+- Omit the key for trivial edits (typos, formatting); bump it only when the documented guidance substantively changes.
+
 ### Structure
 
 Patterns contain fenced markdown codeblocks (always containing language and filename) surrounded by explanations of how/when they should be used.
