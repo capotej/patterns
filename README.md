@@ -19,6 +19,9 @@ This repo houses a collection of common patterns that can be mixed and matched t
 | [P011](patterns/P011-using-ruff.md) | Using ruff | Python linter as a uv dev dep, configured in `[tool.ruff]`, `uv run ruff check .`, gated in CI. |
 | [P012](patterns/P012-using-ty.md) | Using ty | Python type checker as a uv dev dep, zero-config, `uv run ty check src`, gated in CI. |
 | [P013](patterns/P013-code-notes.md) | Code Notes (GHC-style "Notes") | Titled, cross-referenceable block comments (`Note [Title]` / `See Note [Title]`) that describe the present state, not the journey. |
+| [P014](patterns/P014-using-oxfmt.md) | Using oxfmt | JS/TS/JSON formatter as a mise tool from the `oxc-project/oxc` release; `.oxfmtrc.jsonc`, `pnpm format`/`format:check`. |
+| [P015](patterns/P015-using-oxlint.md) | Using oxlint | JS/TS linter as a mise tool sharing oxfmt's release; `.oxlintrc.json`, correctness/suspicious/perf as errors, `pnpm lint`. |
+| [P016](patterns/P016-using-mise-action.md) | Using mise-action in CI | `jdx/mise-action` installs `mise.toml` tools in CI so versions never drift (SHA-pinned, the CI half of P003). |
 
 ## Pattern Format
 
