@@ -22,6 +22,7 @@ This repo houses a collection of common patterns that can be mixed and matched t
 | [P014](patterns/P014-using-oxfmt.md) | Using oxfmt | JS/TS/JSON formatter from oxc — devDependency (default) or mise tool; `.oxfmtrc.jsonc`, `pnpm format`/`format:check`. |
 | [P015](patterns/P015-using-oxlint.md) | Using oxlint | JS/TS linter from oxc — devDependency (default) or mise tool; `.oxlintrc.json`, correctness/suspicious/perf as errors, `pnpm lint`. |
 | [P016](patterns/P016-using-mise-action.md) | Using mise-action in CI | `jdx/mise-action` installs `mise.toml` tools in CI so versions never drift (SHA-pinned, the CI half of P003). |
+| [P017](patterns/P017-release-skill.md) | The Release Skill | Encode the release pipeline as a trigger-gated agent skill: pre-flight gates → version → changelog → publish → tag → verify CI green. |
 
 ## Pattern Format
 
