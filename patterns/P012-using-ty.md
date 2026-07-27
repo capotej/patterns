@@ -22,7 +22,7 @@ ty is a Python package, so it goes in the dev dependencies alongside ruff (P011)
 
 ```toml title="pyproject.toml"
 [project.optional-dependencies]
-dev = ["pytest>=7", "ruff>=0.13", "ty>=0.0.1"]
+dev = ["pytest>=7", "ruff>=0.16", "ty>=0.0.1"]
 ```
 
 ty is young (0.0.x). The exact version is resolved and pinned in the committed `uv.lock` (P010). When the version changes, edit `pyproject.toml` then `uv lock`.
@@ -98,7 +98,7 @@ not the whole repo.
 
 ```toml title="pyproject.toml"
 [project.optional-dependencies]
-dev = ["pytest>=7", "ruff>=0.13", "ty>=0.0.1"]
+dev = ["pytest>=7", "ruff>=0.16", "ty>=0.0.1"]
 ```
 
 ```yaml title=".github/workflows/ci.yml"

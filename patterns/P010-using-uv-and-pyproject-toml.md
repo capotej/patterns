@@ -104,7 +104,7 @@ Dev-only tools (pytest, ruff, ty) are declared separately from runtime deps. The
 [dependency-groups]
 dev = [
     "pytest>=8.0.0",
-    "ruff>=0.13",
+    "ruff>=0.16",
     "ty>=0.0.19",
 ]
 # install with:  uv sync --group dev
@@ -114,7 +114,7 @@ dev = [
 [project.optional-dependencies]
 dev = [
     "pytest>=8.0.0",
-    "ruff>=0.13",
+    "ruff>=0.16",
 ]
 # install with:  uv sync --extra dev
 ```
@@ -213,7 +213,7 @@ requires-python = ">=3.13"
 dependencies = [ ... ]
 
 [project.optional-dependencies]
-dev = ["pytest>=7", "ruff>=0.13", "ty>=0.0.1"]
+dev = ["pytest>=7", "ruff>=0.16", "ty>=0.0.1"]
 
 [tool.setuptools.dynamic]
 version = { attr = "hermes_harness_plugin.__version__" }
