@@ -29,16 +29,16 @@ Concretely:
 
 ```yaml
 # Correct
-uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 
 # Wrong — tag-only (mutable, can be force-pushed)
 uses: actions/checkout@v5
 
 # Wrong — SHA without tag comment (unreadable, can't tell what version)
-uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd
+uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09
 
 # Wrong — short SHA (not unique enough, not verifiable)
-uses: actions/checkout@93cb6efe
+uses: actions/checkout@fbc6f399
 ```
 
 ### Why SHA-pin?
@@ -56,7 +56,7 @@ A raw SHA is a 40-character hex string that tells a reader nothing about what ve
 The tag comment should match the version string the action's maintainer publishes. Both of these forms are acceptable:
 
 ```yaml
-uses: actions/checkout@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+uses: actions/checkout@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
 ```
 
@@ -77,7 +77,7 @@ uses: ./.github/actions/attest-provenance
 Reusable workflows called with `uses: owner/repo/.github/workflows/flow.yml@ref` follow the same rule — pin `@ref` to a SHA with a tag comment:
 
 ```yaml
-uses: boldblackai/harness/.github/workflows/docker.yml@93cb6efe18208431cddfb8368fd83d5badbf9bfd # v5
+uses: boldblackai/harness/.github/workflows/docker.yml@fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09 # v5
 ```
 
 ## How to resolve a tag to a SHA
@@ -135,19 +135,19 @@ Never use tag-only references (e.g. `actions/checkout@v5`). When adding or updat
 
 | Action | SHA | Tag |
 |---|---|---|
-| `actions/checkout` | `93cb6efe18208431cddfb8368fd83d5badbf9bfd` | `v5` |
+| `actions/checkout` | `fbc6f3992d24b796d5a048ff273f7fcc4a7b6c09` | `v5` |
 | `actions/checkout` | `de0fac2e4500dabe0009e67214ff5f5447ce83dd` | `v6.0.2` |
-| `actions/setup-node` | `48b55a011bda9f5d6aeb4c2d9c7362e8dae4041e` | `v6` |
+| `actions/setup-node` | `249970729cb0ef3589644e2896645e5dc5ba9c38` | `v6` |
 | `actions/upload-artifact` | `043fb46d1a93c77aae656e7c1c64a875d1fc6a0a` | `v7` |
 | `actions/download-artifact` | `3e5f45b2cfb9172054b4087a40e8e0b5a5461e7c` | `v8` |
 | `actions/configure-pages` | `45bfe0192ca1faeb007ade9deae92b16b8254a0d` | `v6` |
 | `actions/upload-pages-artifact` | `fc324d3547104276b827a68afc52ff2a11cc49c9` | `v5` |
 | `actions/deploy-pages` | `cd2ce8fcbc39b97be8ca5fce6e763baed58fa128` | `v5` |
-| `docker/setup-buildx-action` | `d7f5e7f509e45cec5c76c4d5afdd7de93d0b3df5` | `v4` |
-| `docker/login-action` | `650006c6eb7dba73a995cc03b0b2d7f5ca915bee` | `v4` |
-| `docker/metadata-action` | `80c7e94dd9b9319bd5eb7a0e0fe9291e23a2a2e9` | `v6` |
-| `docker/build-push-action` | `f9f3042f7e2789586610d6e8b85c8f03e5195baf` | `v7` |
+| `docker/setup-buildx-action` | `bb05f3f5519dd87d3ba754cc423b652a5edd6d2c` | `v4` |
+| `docker/login-action` | `dbcb813823bdd20940b903addbd779551569679f` | `v4` |
+| `docker/metadata-action` | `dc802804100637a589fabce1cb79ff13a1411302` | `v6` |
+| `docker/build-push-action` | `53b7df96c91f9c12dcc8a07bcb9ccacbed38856a` | `v7` |
 | `sigstore/cosign-installer` | `398d4b0eeef1380460a10c8013a76f728fb906ac` | `v3` |
 | `astral-sh/setup-uv` | `08807647e7069bb48b6ef5acd8ec9567f424441b` | `v8.1.0` |
 | `astral-sh/setup-uv` | `d0cc045d04ccac9d8b7881df0226f9e82c39688e` | `v6.8.0` |
-| `pnpm/action-setup` | `0e279bb959325dab635dd2c09392533439d90093` | `v6` |
+| `pnpm/action-setup` | `0977fd99725f1db4007ccb2928dbb4e90d06cc86` | `v6` |
