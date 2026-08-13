@@ -22,7 +22,7 @@ ruff is a Python package, so it goes in the dev dependencies — not in `mise.to
 
 ```toml title="pyproject.toml"
 [project.optional-dependencies]
-dev = ["pytest>=7", "ruff>=0.13", "ty>=0.0.1"]
+dev = ["pytest>=7", "ruff>=0.16", "ty>=0.0.1"]
 ```
 
 The exact version is resolved and pinned in the committed `uv.lock` (P010). When the version changes, edit `pyproject.toml` then `uv lock`.
@@ -115,7 +115,7 @@ Do not create a separate `ruff.toml`. Keep `target-version` in sync with
 
 ```toml title="pyproject.toml"
 [project.optional-dependencies]
-dev = ["pytest>=7", "ruff>=0.13", "ty>=0.0.1"]
+dev = ["pytest>=7", "ruff>=0.16", "ty>=0.0.1"]
 
 [tool.ruff]
 line-length = 99
@@ -135,4 +135,4 @@ select = ["E", "F", "I", "UP", "B", "SIM"]
 - use `ruff` for linting (`uv run ruff check`)
 ```
 
-A Hermes Agent plugin. Declares ruff as a dev dep (`ruff>=0.13`, exact pin in `uv.lock`); configures it in `[tool.ruff]` with `line-length = 99` (per-project) and `target-version = "py313"` matching `requires-python = ">=3.13"`; selects a sensible rule set (`E`, `F`, `I`, `UP`, `B`, `SIM`); gates `ruff check .` as its own CI step. The formatter (`ruff format`) is not gated — ruff is used purely as a linter here.
+A Hermes Agent plugin. Declares ruff as a dev dep (`ruff>=0.16`, exact pin in `uv.lock`); configures it in `[tool.ruff]` with `line-length = 99` (per-project) and `target-version = "py313"` matching `requires-python = ">=3.13"`; selects a sensible rule set (`E`, `F`, `I`, `UP`, `B`, `SIM`); gates `ruff check .` as its own CI step. The formatter (`ruff format`) is not gated — ruff is used purely as a linter here.
