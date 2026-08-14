@@ -23,6 +23,7 @@ This repo houses a collection of common patterns that can be mixed and matched t
 | [P015](patterns/P015-using-oxlint.md) | Using oxlint | JS/TS linter from oxc — devDependency (default) or mise tool; `.oxlintrc.json`, correctness/suspicious/perf as errors, `pnpm lint`. |
 | [P016](patterns/P016-using-mise-action.md) | Using mise-action in CI | `jdx/mise-action` installs `mise.toml` tools in CI so versions never drift (SHA-pinned, the CI half of P003). |
 | [P017](patterns/P017-release-skill.md) | The Release Skill | Encode the release pipeline as a trigger-gated agent skill: pre-flight gates → version → changelog → publish → tag → verify CI green. |
+| [P018](patterns/P018-tokenless-npm-publish.md) | Tokenless npm Publish | OIDC trusted publishing via GitHub Actions — no `NPM_TOKEN` secret. One-time npmjs.com config, `id-token: write` permission, `npm publish` handles the rest. |
 
 ## Pattern Format
 
