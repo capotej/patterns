@@ -25,6 +25,12 @@ This repo houses a collection of common patterns that can be mixed and matched t
 | [P017](patterns/P017-release-skill.md) | The Release Skill | Encode the release pipeline as a trigger-gated agent skill: pre-flight gates → version → changelog → publish → tag → verify CI green. |
 | [P018](patterns/P018-tokenless-npm-publish.md) | Tokenless npm Publish | OIDC trusted publishing via GitHub Actions — no `NPM_TOKEN` secret. One-time npmjs.com config, `id-token: write` permission, `npm publish` handles the rest. |
 
+## Bundle Index
+
+| ID | Bundle | Description |
+| --- | --- | --- |
+| [B001](bundles/B001-typescript-project.md) | TypeScript Project | The baseline set for a new TypeScript repo: mise + pnpm + strict tsc + oxc lint/format + markdownlint + pinned Actions + actionlint + mise-action + the release skill. |
+
 ## Pattern Format
 
 ### Location & Filename
